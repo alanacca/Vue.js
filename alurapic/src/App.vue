@@ -1,61 +1,32 @@
-
 <template>
   <div class="corpo">
-    <h1 class="centralizado">{{titulo}}</h1>
+    <!--Dependendo do momento eu vou acessar determinado componente-->
+    <meu-menu :rotas="routes"></meu-menu>
+    <transition name="pagina">
+      <router-view></router-view>
+    </transition>
+
     
-    <input type="search" class="filtro" @input="filtro= $event.target.value" placeholder="filtre por parte do título">
-    <!--o data binding, v-on = @, vai indicar que no evento de input ele vai colocar a variavel filtro do data igual ao que fo digitado pelo usuário-->
     
-    <ul class="lista-fotos">
-      <li class="lista-fotos-item" v-for="foto of fotosComFiltro">
-      
-        <meu-painel :titulo="foto.titulo">
-          <img class="imagem-responsiva" :src="foto.url" :alt="foto.titulo">
-        </meu-painel>
-        
-      </li>
-    </ul>
   </div>
 </template>
 
 <script>
 
-import Painel from './components/shared/painel/Painel.vue';
+import {routes} from './routes';
+import Menu from './components/shared/menu/Menu.vue';
 
 export default {
 
   components: {
-    'meu-painel' : Painel//as aspas foram devido ao hífem no nome da "variavel"
+    'meu-menu': Menu
   },
 
   data() {
-    return {
-      titulo: "AluraPic",
-
-      fotos: [],
-
-      filtro: ''
+    
+    return{
+      routes
     }
-  },
-
-  computed: {
-    fotosComFiltro() {
-      if(this.filtro){
-        //Cira uma expressão com o alor do filtro insesitivo
-        let exp = new RegExp(this.filtro.trim(),'i');
-        //retorna apenas as fotos que condizem com a expressão no filtro
-        return this.fotos.filter(foto => exp.test(foto.titulo));//esse filter() é uma função prórpia do javascript
-      }else{  
-        //se não tiver nada no filtro mostra todos os elementos
-        return this.fotos;
-      }
-    } 
-  },
-
-  created() {
-    let promise = this.$http.get('http://localhost:3000/v1/fotos')
-      .then(res => res.json())//É pego a respota da API no seu formato json
-      .then(fotos => this.fotos = fotos, err => console.log(err));//São pegas as fotos da API e colocadas na variavel do export(this.fotos)
   }
 
 }
@@ -68,25 +39,13 @@ export default {
     margin: 0 auto;
   }
 
-  .centralizado{
-    text-align: center;
+  .pagina-enter, .pagina-leave-active {
+    opacity: 0;
   }
 
-  .lista-fotos{
-    list-style: none;
+  .pagina-enter-active, .pagina-leave-active {
+    transition: opacity .4s;
   }
 
-  .lista-fotos .lista-fotos-item{
-    display: inline-block;
-  }
-
-  .imagem-responsiva{
-    width: 100%;
-  }
-
-  .filtro{
-    display: block;
-    width: 100%;
-  }
 
 </style>

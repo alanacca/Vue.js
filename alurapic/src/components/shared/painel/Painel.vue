@@ -65,6 +65,10 @@ export default {
         box-shadow: 5px 5px 5px;
     }
 
+    .painel-conteudo{
+        overflow: hidden;
+    }
+
     .painel-fade-enter, .painel-fade-leave-active {
         opacity: 0;
     }
