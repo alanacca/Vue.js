@@ -8,6 +8,7 @@ colocar as {} para indicar qual o elemento de routes.js que eu quero importar */
 import './directives/Transform';
 
 Vue.use(VueResouce);
+Vue.http.options.root = 'http://localhost:3000';
 Vue.use(VueRouter)
 
 const router = new VueRouter({ 

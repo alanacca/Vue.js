@@ -25,7 +25,8 @@ export default {
   data() {
     
     return{
-      routes
+      routes : routes.filter(route => route.menu)
+      //para cada filtro do meu array verifica que o menu é true, se for entra pro array de routes
     }
   }
 

@@ -7,7 +7,7 @@
           <router-link 
             :to="rota.path ? rota.path : '/'">
             {{rota.titulo}} <!--if path foi definido vai ser path, 
-                                                                mas se estiver em branco vai ser uma barra-->
+            mas se estiver em branco vai ser uma barra-->
           </router-link>
           <!--o router link é um atributo do vue router para que a página não seja regarregada
           quando o botão do menu for clicado, ou seja, para que a aplicação contiuasse a ser uma single page aplication-->

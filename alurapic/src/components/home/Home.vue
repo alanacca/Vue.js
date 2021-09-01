@@ -3,6 +3,9 @@
   <div>
     <h1 class="centralizado">{{titulo}}</h1>
     
+      <p v-show="mensagem" class="centralizado"> {{ mensagem }} </p>
+
+
     <input type="search" class="filtro" @input="filtro= $event.target.value" placeholder="filtre por parte do título">
     <!--o data binding, v-on = @, vai indicar que no evento de input ele vai colocar a variavel filtro do data igual ao que fo digitado pelo usuário-->
     
@@ -11,6 +14,9 @@
       
         <meu-painel :titulo="foto.titulo">
           <imagem-responsiva v-meu-transform:scale.animate="15" :url = "foto.url" :titulo = "foto.titulo"/>
+          <router-link :to="{name: 'altera',params: {id: foto._id}}">
+            <meu-botao tipo="button" rotulo="ALTERAR"></meu-botao>
+          </router-link>
           <meu-botao tipo="button" rotulo="REMOVER" @botaoAtivado="remove(foto)" :confirmacao="true" estilo="perigo"></meu-botao>
         </meu-painel>
         
@@ -24,6 +30,7 @@
 import Painel from '../shared/painel/Painel.vue';
 import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue';
 import Botao from '../shared/botao/Botao.vue'
+import FotoService from '../../domain/foto/FotoService'
 
 export default {
 
@@ -39,7 +46,9 @@ export default {
 
       fotos: [],
 
-      filtro: ''
+      filtro: '',
+      
+      mensagem: ''
     }
   },
 
@@ -60,17 +69,38 @@ export default {
   methods: {
 
       remove(foto) {
-        alert("remover a foto" + foto.titulo);
-      }
 
+        this.service
+          .apaga(foto._id)
+        //this.resource.delete({id: foto._id})//esse elemento tem que ter o mesmo nome do coringa na area do create
+          .then(()=> {
+          let indice = this.fotos.indexOf(foto);
+          this.fotos.splice(indice,1);
+          this.mensagem = 'Foto removida com sucesso'}, err=> {
+            this.mensagem = err.message;
+        });
+      },
   },
 
-  created() {
-    let promise = this.$http.get('http://localhost:3000/v1/fotos')
-      .then(res => res.json())//É pego a respota da API no seu formato json
-      .then(fotos => this.fotos = fotos, err => console.log(err));//São pegas as fotos da API e colocadas na variavel do export(this.fotos)
-  }
 
+  created() {
+
+
+    this.service = new FotoService(this.$resource);
+
+    this.service
+      .lista()
+      .then(fotos => this.fotos = fotos, err=> {
+        this.mensagem = err.message;
+        });
+
+
+    /*this.resource = this.$resource('v1/fotos{/id}')//indicando que aceita receber um parametro. Nesse caso o parametro via ser o id da foto usado no metodo remove
+    this.resource
+      .query()
+      .then(res => res.json())//É pego a respota da API no seu formato json
+      .then(fotos => this.fotos = fotos, err => console.log(err));//São pegas as fotos da API e colocadas na variavel do export(this.fotos)*/
+  }
 }
 </script>
 

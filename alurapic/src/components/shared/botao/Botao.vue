@@ -8,8 +8,9 @@ export default {
     //props: ['tipo','rotulo','confirmacao','estilo'],
 
     props: {
-        tipo: {/* essas propriedades especificadas não previnem o erro,
+        /* essas propriedades especificadas não previnem o erro,
         mas ajuda na hora da descrição do erro */
+        tipo: {
             required: true,
             type: String
         },
@@ -33,7 +34,7 @@ export default {
         disparaAcao() {
             if(this.confirmacao){
                 if(confirm('Confirma Operação?')){
-                    this.$emit('botaoAtivado');//O filho passar uma informação pro elemento pai
+                    this.$emit('botaoAtivado');//O filho passa uma informação pro elemento pai
                     //para mandar o dado é só passar o $event nos elementos do pai
                 }
                 return;
