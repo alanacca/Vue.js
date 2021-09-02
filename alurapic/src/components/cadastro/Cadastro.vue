@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1 class="centralizado"> Cadastro </h1>
-        <h2 class="centralizado">{{foto.titulo}}</h2>
+        <!--<h2 class="centralizado">{{foto.titulo}}</h2>-->
 
 
         <h2 v-if="foto._id" class="centralizado">Alterando</h2><!--se tem foto._id, no caso, está alterando-->
@@ -11,12 +11,15 @@
         <form @submit.prevent="grava()"> <!--O prevent vai cancelar a ação padrão do elemento, nesse caso submit-->
             <div class="controle">
                 <label for="titulo">Titulo</label>
-                <input id="titulo" autocomplete="off" v-model="foto.titulo">
+                <input data-vv-as="titulo" name="titulo" v-validate data-vv-rules="required|min:3|max:30" id="titulo" autocomplete="off" v-model="foto.titulo">
+                <span class="erro" v-show="errors.has('titulo')">{{ errors.first('titulo') }}</span>
+                <!--O atributos has pede o nome do objeto que precisa ser verificado se está em branco ou não-->
             </div>
 
             <div class="controle">
                 <label for="url">URL</label>
-                <input id="url" autocomplete="off" v-model.lazy="foto.url">
+                <input name="url" id="url" v-validate data-vv-rules="required" autocomplete="off" v-model="foto.url">
+                <span class="erro" v-show="errors.has('url')">{{ errors.first('url') }}</span>
                 <imagem-responsiva v-show="foto.url" :url= "foto.url" :titulo="foto.titulo"/>
             </div>
 
@@ -62,16 +65,20 @@ export default {
 
     methods: {
         grava (){
-
-            this.service
-                .cadastra(this.foto)
-                .then(() => {
-                    if(this.id){
-                        this.$router.push({name: 'home'});//o router lida com todas as navegações do meu site
+            this.$validator
+                .validateAll()
+                .then(success => {
+                    if(success){
+                        this.service
+                        .cadastra(this.foto)
+                        .then(() => {
+                            if(this.id){
+                                this.$router.push({name: 'home'});//o router lida com todas as navegações do meu site
+                            }
+                            this.foto = new Foto()}
+                            ,err => console.log(err));
                     }
-                    this.foto = new Foto()}
-                    ,err => console.log(err));
-                    
+                })
             /*this.$http
                 .post('v1/fotos', this. foto)//o post envia dados para a API
                         //primeiro parametro do post é onde vai ser inserido e o segundo é o que vai ser inserido*/
@@ -111,6 +118,8 @@ export default {
         border-radius: 5px;
     }
 
-
+    .erro{
+        color:red;
+    }
 
 </style>

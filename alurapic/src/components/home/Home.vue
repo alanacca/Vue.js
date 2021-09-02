@@ -1,6 +1,8 @@
 
 <template>
   <div>
+    <!--<img src="/static/asd.jpg"> para importar uma imagem pro código, deve-se criar a pasta static e colocar as imagens la dentro-->
+    <!--quando for utilizar sa imagens direto do pc deve levar a pasta static para dentro da pasta do servidor junto com o index.html e a pasta dist-->
     <h1 class="centralizado">{{titulo}}</h1>
     
       <p v-show="mensagem" class="centralizado"> {{ mensagem }} </p>

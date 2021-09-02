@@ -1,4 +1,6 @@
 import Cadastro from './components/cadastro/Cadastro.vue';
+//const Cadastro = () => System.import('./components/cadastro/Cadastro.vue')//criando para só ser usado quando for acessado para o usuário
+//e assim desfragmentar o documento do build.js em dois documentos
 import Home from './components/home/Home.vue';
 
 export const routes = [
